@@ -11,6 +11,7 @@
     <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/5.2.0/superhero/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.3/gh-fork-ribbon.min.css" />
     <style>
         body {
             background: #232020;
@@ -84,6 +85,7 @@
     </style>
 </head>
 <body>
+<a class="github-fork-ribbon" href="https://github.com/benschoch/awesome-go-extended" data-ribbon="Visit me on GitHub" title="Visit me on GitHub">Visit me on GitHub</a>
 <div class="container">
     <a href="#" id="toTopBtn" class="cd-top text-replace js-cd-top cd-top--is-visible cd-top--fade-out"
        data-abc="true"></a>
@@ -102,9 +104,7 @@
                     <span class="caret"></span></button>
                 <ul class="dropdown-menu" aria-labelledby="categoryFilterButton">
                     <input class="form-control" id="categoryFilter" type="text" placeholder="Filter categories..">
-                    {{ range .Sections }}
-                    <li><a href="#{{ .Anchor }}">{{ .Title }}</a></li>
-                    {{ end }}
+                    {{ range .Sections }}<li><a href="#{{ .Anchor }}">{{ .Title }}</a></li>{{ end }}
                 </ul>
             </div>
         </div>
@@ -138,14 +138,12 @@
                 </tr>
                 </thead>
                 <tbody>
-                {{ range .GithubPackages }}
-                <tr>
+                {{ range .GithubPackages }}<tr>
                     <td><a href="{{ .URL }}" target="_blank">{{ .Name }}</a></td>
                     <td>{{ .Stars }}</td>
                     <td>{{ .UpdatedAt.Format "2006-01-02" }}</td>
                     <td>{{ .Description }}</td>
-                </tr>
-                {{ end }}
+                </tr>{{ end }}
                 </tbody>
             </table>
         </section>
@@ -164,13 +162,11 @@
                 </tr>
                 </thead>
                 <tbody>
-                {{ range .OtherPackages }}
-                <tr>
+                {{ range .OtherPackages }}<tr>
                     <td><a href="{{ .URL }}" target="_blank">{{ .Name }}</a></td>
                     <td><a href="{{ .URL }}" target="_blank">{{ .URL }}</a></td>
                     <td>{{ .Description }}</td>
-                </tr>
-                {{ end }}
+                </tr>{{ end }}
                 </tbody>
             </table>
         </section>
