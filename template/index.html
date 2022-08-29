@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Awesome Go - Sortable</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
+    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/5.2.0/superhero/bootstrap.min.css">
+    <style>
+        body {
+            background: #232020;
+            padding: 1em;
+        }
+
+        .container {
+            width: 70%;
+        }
+
+        h1 {
+            margin-bottom: 1em;
+        }
+
+        h1 .small {
+            font-size: 1rem;
+            top: -23px;
+            left: 5px;
+        }
+
+        h5 {
+            margin: 20px 0 15px
+        }
+
+        .alert {
+            margin-bottom: 3em;
+        }
+
+        #categoryFilter {
+            padding: .5em 1em;
+            margin-top: 0;
+            position: sticky;
+            top: 0;
+        }
+
+        .dropdown-menu {
+            max-height: 260px;
+            overflow: scroll;
+            padding: 0;
+        }
+
+        .dropdown-menu li {
+            padding: 0.5em 1em;
+            border-bottom: 2px solid #333;
+        }
+
+        .dropdown-menu.show {
+            box-shadow: 2px 4px 10px #222
+        }
+
+        .dropdown-menu a {
+            display: block;
+        }
+
+        .category {
+            padding: 3em 0;
+            border-bottom: 2px solid #333;
+        }
+
+        .table td, .table th {
+            padding: .5rem;
+        }
+
+        .back-to-top {
+            cursor: pointer;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <a href="#" id="toTopBtn" class="cd-top text-replace js-cd-top cd-top--is-visible cd-top--fade-out"
+       data-abc="true"></a>
+
+    <h1><a href="https://github.com/avelino/awesome-go" target="_blank">Awesome Go</a> <sup class="small">just a bit more awesome</sup> 🦄</h1>
+    <div class="alert alert-primary align-items-center" role="alert">
+        <strong>Please note:</strong>
+            This project is just a tiny little helper to allow sorting & searching the <a href="https://github.com/avelino/awesome-go" target="_blank">Awesome Go</a> package list a bit better and include details such as GitHub stars & number of forks. <br>
+        Feedback and kudos for the selection and description of the packages listed, should be shared there.
+    </div>
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="dropdown">
+                <button class="btn btn-primary dropdown-toggle" id="categoryFilterButton" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Go to category
+                    <span class="caret"></span></button>
+                <ul class="dropdown-menu" aria-labelledby="categoryFilterButton">
+                    <input class="form-control" id="categoryFilter" type="text" placeholder="Filter categories..">
+                    {{ range .Sections }}
+                    <li><a href="#{{ .Anchor }}">{{ .Title }}</a></li>
+                    {{ end }}
+                </ul>
+            </div>
+        </div>
+        <div class="col-sm-8">
+            <div class="input-group">
+                <input class="form-control" id="globalSearch" type="text" placeholder="Global Search..">
+                <span class="input-group-append">
+                    <button class="btn btn-primary" id="resetGlobalSearch" type="button">
+                        Reset
+                    </button>
+                  </span>
+            </div>
+        </div>
+    </div>
+    {{ range .Sections }}
+    <section class="category">
+        <h3 id="{{ .Anchor }}">{{ .Title }}</h3>
+        <p>{{ .Description }}</p>
+        {{ if gt (len .GithubPackages) 0 }}
+        <section class="section-table">
+            {{ if gt (len .OtherPackages) 0 }}
+            <h5>Packages found on GitHub:</h5>
+            {{ end }}
+            <table class="table table-dark table-striped table-bordered sortable-table">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Stars</th>
+                    <th>UpdatedAt</th>
+                    <th>Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{ range .GithubPackages }}
+                <tr>
+                    <td><a href="{{ .URL }}" target="_blank">{{ .Name }}</a></td>
+                    <td>{{ .Stars }}</td>
+                    <td>{{ .UpdatedAt.Format "2006-01-02" }}</td>
+                    <td>{{ .Description }}</td>
+                </tr>
+                {{ end }}
+                </tbody>
+            </table>
+        </section>
+        {{ end }}
+        {{ if gt (len .OtherPackages) 0 }}
+        <section class="section-table">
+            {{ if gt (len .GithubPackages) 0 }}
+            <h5>Packages not referenced via GitHub:</h5>
+            {{ end }}
+            <table class="table table-dark table-striped table-bordered sortable-table">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>URL</th>
+                    <th>Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{ range .OtherPackages }}
+                <tr>
+                    <td><a href="{{ .URL }}" target="_blank">{{ .Name }}</a></td>
+                    <td><a href="{{ .URL }}" target="_blank">{{ .URL }}</a></td>
+                    <td>{{ .Description }}</td>
+                </tr>
+                {{ end }}
+                </tbody>
+            </table>
+        </section>
+        {{ end }}
+    </section>
+    {{ end }}
+
+    <a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top" role="button" data-toggle="tooltip"
+       data-placement="left">
+        <span class="fas fa-chevron-up"></span>
+    </a>
+</div>
+<script>
+    $(document).ready(function () {
+        let dataTables = $('.sortable-table');
+        let globalSearch = $("#globalSearch");
+
+        dataTables.each(function () {
+            let tableAPI = $(this).DataTable({
+                "order": [[1, "desc"]],
+                "pageLength": 25,
+                "lengthMenu": [ 25, 50, 100 ],
+            })
+            $(this).on('search.dt', function () {
+                if (tableAPI.search() !== globalSearch.val()) {
+                    // individual table search is ignored
+                    return
+                }
+
+                // show all tables initially
+                let tableSection = $(this).closest(".section-table").show();
+                let categorySection = $(this).closest(".category").show();
+
+                // hide tables without results
+                let visibleRows = tableAPI.page.info().recordsDisplay;
+                if (visibleRows > 0) {
+                    tableSection.show()
+                } else {
+                    tableSection.hide()
+                }
+
+                // hide section without results
+                if (categorySection.find("td:visible").length) {
+                    categorySection.show()
+                } else {
+                    categorySection.hide()
+                }
+            });
+        })
+
+        // category drop down
+        $("#categoryFilter").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $(".dropdown-menu li").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+
+        // global search
+        globalSearch.on("keyup", function (e) {
+            let tablesFilter = $(".dataTables_filter [type=search]");
+            tablesFilter.val($(this).val())
+            tablesFilter.trigger("keyup")
+            if (e.keyCode === 27) {
+                $('#resetGlobalSearch').click();
+            }
+        });
+
+        // reset global search
+        $("#resetGlobalSearch").on("click", function () {
+            globalSearch.val("").trigger("keyup")
+        })
+
+        // scroll to top link
+        let scrollToTop = $('#back-to-top');
+        $(window).scroll(function () {
+            if ($(this).scrollTop() > 50) {
+                scrollToTop.fadeIn();
+            } else {
+                scrollToTop.fadeOut();
+            }
+        });
+        scrollToTop.click(function () {
+            scrollToTop.tooltip('hide');
+            $('body,html').animate({
+                scrollTop: 0
+            }, 800);
+            return false;
+        });
+    });
+</script>
+</body>
+</html>
