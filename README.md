@@ -5,10 +5,6 @@ repository.
 
 All credits for the content go the project and its countless contributors. Thanks for providing such a great overview of awesome packages for Go – [Share some love if you like it](https://github.com/sponsors/avelino) 🦄
 
-## TL;DR
-
-You can download and open the [index.html](./index.html) file or head your browser to [my github.io page](https://benschoch.github.io/).
-
 ## Build HTML
 
 1. Get a [GitHub access token](https://github.com/settings/tokens)
